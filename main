@@ -1,15 +1,12 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=4,vmem=30gb,walltime=2:00:00
-#PBS -N app-extract-bundles-quickbundles
+#PBS -l nodes=1:ppn=4,vmem=30gb,walltime=4:00:00
+#PBS -N app-filterViaQuickbundles
 
-mkdir -p wmc wmc/tracts
+# run cull
 
-# run AFQ segmentation
-if [ ! -f ./wmc/classification.mat ]; then
-	SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://brainlife/pyafq:dev ./initialSegmentation.py
-fi
+SINGULARITYENV_PYTHONNOUSERSITE=true singularity exec -e docker://brainlife/pyafq:dev ./initialSegmentation.py
 
-if [ -f ./wmc/classification.mat ]; then
+if [ -f track.tck ]; then
 	echo "complete"
 	exit 0
 else

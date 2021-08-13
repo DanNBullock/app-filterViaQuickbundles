@@ -1,0 +1,5 @@
+{
+	"minStreamsInCluster":	"3",
+	"dwi":	"D:\testData\dwi.nii.gz",
+	"tractogram":	"D:\testData\track.tck"
+}
