@@ -52,8 +52,8 @@ clusters = qb.cluster(tractogram.streamlines)
 [outTractogram,culledTractogram]=cullViaClusters(clusters,tractogram,streamThresh)
 
 #save tractograms
-save_tractogram(outTractogram, os.path.join('output_tck','track.tck'))
-save_tractogram(culledTractogram, os.path.join('output_tck2','culled.tck'))
+save_tractogram(outTractogram, os.path.join('outputTck','track.tck'))
+save_tractogram(culledTractogram, os.path.join('outputTck2','culled.tck'))
 
 numberCulled=inputStreamNumber-len(outTractogram.streamlines)
 print(str(numberCulled) + ' streamlines culled')
@@ -61,7 +61,7 @@ print(str(numberCulled) + ' streamlines culled')
 sns.histplot(data=np.asarray(list(map(len, clusters))),log_scale=True, binwidth=.1)
 #I dont know why I have to enter it in for both values
 plt.plot([streamThresh,streamThresh], [  1,100], linewidth=4,color='red')
-plt.savefig(os.path.join('output_tck','clusterCullHist.png'))
+plt.savefig(os.path.join('outputTck','clusterCullHist.png'))
 #not working, fix later
 #plt.xlabel='cluster size'
 #plt.title='cluster size counts'
