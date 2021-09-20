@@ -25,7 +25,8 @@ def jsonParseNPass():
         return reference, tractogram, streamThresh
 
 def cullViaClusters(clusters,tractogram,streamThresh):
-    clustersSurviveThresh=np.greater(np.asarray(list(map(len, clusters))),streamThresh)
+    #apparently this can cause some issues on linux machines with dtype u21?
+    clustersSurviveThresh=np.greater(np.asarray(list(map(len, clusters))).astype(np.int32),streamThresh.astype(np.int32))
     survivingStreams=[]
     for iclusters in clusters[clustersSurviveThresh]:
         survivingStreams=survivingStreams + iclusters.indices
