@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jun 11 11:31:12 2022
+Created on Mon Jun 13 17:56:15 2022
 
-@author: Daniel
+@author: dan
 """
+
 import os
 import sys
 
@@ -109,20 +111,26 @@ try:
     
     #create some output 
     #wmc
+    print('saving surviving streams wmc')
     if not os.path.exists(os.path.join('wmc_survived')):
         os.makedirs(os.path.join('wmc_survived'))
     savemat(os.path.join('wmc_survived','classification.mat'),{ "classification": {"names": np.array(survivorClass['names'], dtype=np.object), "index": survivorClass['index'] }})
+    print('saving culled streams wmc')
     if not os.path.exists(os.path.join('wmc_culled')):
         os.makedirs(os.path.join('wmc_culled'))
     savemat(os.path.join('wmc_culled','classification.mat'),{ "classification": {"names": np.array(culledClass['names'], dtype=np.object), "index": culledClass['index'] }})
           
     #tck
+    print('saving surviving streams tck')
     if not os.path.exists(os.path.join('tck_survived')):
         os.makedirs(os.path.join('tck_survived'))
-    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamlines[survivingStreamsIndicies], os.path.join('tck_survived'))
+    streamSubset=streamlines[survivingStreamsIndicies]
+    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamSubset, os.path.join('tck_survived','track.tck'))
+    print('saving culled streams tck')
     if not os.path.exists(os.path.join('tck_culled')):
         os.makedirs(os.path.join('tck_culled'))
-    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamlines[survivingStreamsIndicies], os.path.join('tck_culled'))
+    streamSubset=streamlines[culledStreamIndicies]
+    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamSubset,  os.path.join('tck_culled','track.tck'))
      
     #if there's no input file classification
 except:
@@ -136,18 +144,24 @@ except:
     
     #create some output 
     #wmc
+    print('saving surviving streams wmc')
     if not os.path.exists(os.path.join('wmc_survived')):
         os.makedirs(os.path.join('wmc_survived'))
     savemat(os.path.join('wmc_survived','classification.mat'),{ "classification": {"names": np.array(survivorClass['names'], dtype=np.object), "index": survivorClass['index'] }})
+    print('saving culled streams wmc')
     if not os.path.exists(os.path.join('wmc_culled')):
         os.makedirs(os.path.join('wmc_culled'))
     savemat(os.path.join('wmc_culled','classification.mat'),{ "classification": {"names": np.array(culledClass['names'], dtype=np.object), "index": culledClass['index'] }})
           
     #tck
+    print('saving surviving streams tck')
     if not os.path.exists(os.path.join('tck_survived')):
         os.makedirs(os.path.join('tck_survived'))
-    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamlines[survivingStreamsIndicies], os.path.join('tck_survived'))
+    streamSubset=streamlines[survivingStreamsIndicies]
+    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamSubset, os.path.join('tck_survived','track.tck'))
+    print('saving culled streams tck')
     if not os.path.exists(os.path.join('tck_culled')):
         os.makedirs(os.path.join('tck_culled'))
-    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamlines[survivingStreamsIndicies], os.path.join('tck_culled'))
+    streamSubset=streamlines[culledStreamIndicies]
+    wmaPyTools.streamlineTools.stubbornSaveTractogram(streamSubset, os.path.join('tck_culled','track.tck'))
     
