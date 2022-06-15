@@ -33,6 +33,13 @@ with open('config.json') as config_json:
 	config = json.load(config_json)
     
 streamThresh=config['streamThresh']
+
+#try to get the qbThreshes key
+try:
+    #but it comes in as a string so
+    qbThreshes=[int(iqbThresh) for iqbThresh in config['qbThreshes'].split(',')]
+except:
+    qbThreshes=[30,20,10,5]
     
 tractopgramIn=nib.streamlines.load(config['tractogram'])
 streamlines=tractopgramIn.streamlines
@@ -65,7 +72,7 @@ def quickbundlesClusters(streamlines, **kwargs):
     if not 'thresholds' in kwargs.keys():
         thresholds = [30,20,10,5]
     if not 'nb_points' in kwargs.keys():
-        nb_pts=20
+        nb_pts=50
     #perform the quick, iterave bundling
     clusters=qbx_and_merge(streamlines,thresholds , nb_pts, select_randomly=None, rng=None, verbose=False)
     

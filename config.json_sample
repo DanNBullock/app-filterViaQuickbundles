@@ -1,6 +1,6 @@
 {
-	"number_bundles":	"3",
-	"dwi":	"./data/dwi/dwi.nii.gz",
-	"tractogram":	"./data/track/track.tck",
-	"classification":	"./data/wmc/classification.mat"
+    "classification": "testdata/classification.mat", 
+    "streamThresh": 15,
+	"tractogram":	"testdata/track.tck",
+	"qbThreshes": "32,16,8,3"
 }
