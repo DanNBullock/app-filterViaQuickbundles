@@ -136,10 +136,10 @@ try:
 except:
     #wmc doesn't really matter, just create uniform vec outputs for both
     #have to do this because of brainilfe output conventions
-    surviveBool=np.ones(np.sum(survivingStreamsIndicies),dtype=bool)
+    surviveBool=np.ones(len(survivingStreamsIndicies),dtype=bool)
     survivorClass=wmaPyTools.streamlineTools.updateClassification(surviveBool,'survivingStreams',existingClassification=None)
     
-    cullBool=np.ones(np.sum(culledStreamIndicies),dtype=bool)
+    cullBool=np.ones(len(culledStreamIndicies),dtype=bool)
     culledClass=wmaPyTools.streamlineTools.updateClassification(surviveBool,'culledStreams',existingClassification=None)
     
     #create some output 
