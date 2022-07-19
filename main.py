@@ -41,66 +41,19 @@ try:
 except:
     qbThreshes=[30,20,10,5]
     
-tractopgramIn=nib.streamlines.load(config['tractogram'])
-streamlines=tractopgramIn.streamlines
+tractogramIn=nib.streamlines.load(config['tractogram'])
+streamlines=tractogramIn.streamlines
 
-def quickbundlesClusters(streamlines, **kwargs):
-    """
-    (quickly?, via qbx_and_merge?) perform a quick-bundling of an input
-    collection of streamlines, and then extract centroids of the resultant
-    clusters as streamlines.
-    Parameters
-    ----------
-    streamlines : nibabel.streamlines.array_sequence.ArraySequence
-        The input streamlines 
-    **kwargs : keyword arguments for the qbx_and_merge
-        Currently only supports [thresholds] and [nb_pts]
-        See dipy.segment.bundles.qbx_and_merge for more details
-    Returns
-    -------
-    centroidsAsStreamlines : nibabel.streamlines.array_sequence.ArraySequence
-        A streamline object containing the centroids of the clusters resulting
-        quickBundle-ification of the input streamlines
-    clusters : dipy.segment.clustering.ClusterMapCentroid
-        The clusters resulting from the quickBundle-ification of the input 
-        streamlines
-    """
-    from dipy.segment.bundles import qbx_and_merge
-    from dipy.tracking.streamline import Streamlines
-    
-    #fill in parameters if they are there.
-    if not 'thresholds' in kwargs.keys():
-        thresholds = [30,20,10,5]
-    if not 'nb_points' in kwargs.keys():
-        nb_pts=50
-    #perform the quick, iterave bundling
-    clusters=qbx_and_merge(streamlines,thresholds , nb_pts, select_randomly=None, rng=None, verbose=False)
-    
-    return clusters
-    
-def cullViaClusters(clusters,streamlines,streamThresh):
-    import itertools
-    #get the cluster lengths
-    clusterLengths=[len(iCluster) for iCluster in clusters]
-    
-    #find which have meet the thresh criterion
-    clustersSurviveThresh=np.greater(clusterLengths,streamThresh)
-    
-    #get a list of the clusters
-    survivingClusters=list(itertools.compress(clusters,clustersSurviveThresh))
-    #get the indexes of the streamlines from each
-    survivingClusterLists=[iCluster.indices for iCluster in survivingClusters]
-    #cat them all together
-    survivingStreamsIndicies=list(itertools.chain(*survivingClusterLists))
-    
-    #find the obverse of the surviving stream set
-    culledStreamIndicies=list(set(list(range(0,len(streamlines))))-set(survivingStreamsIndicies))
+#quickbundlesClusters(streamlines, thresholds = [30,20,10,5], nb_pts=100,verbose=False)
+clustersOut=wmaPyTools.streamlineTools.quickbundlesClusters(streamlines,thresholds = qbThreshes)
 
-    return survivingStreamsIndicies, culledStreamIndicies
-
-clustersOut=quickbundlesClusters(streamlines)
-
-survivingStreamsIndicies, culledStreamIndicies= cullViaClusters(clustersOut.clusters,streamlines,streamThresh)
+#find surviving and culled indexes
+survivingStreamsIndicies, culledStreamIndicies= wmaPyTools.streamlineTools.cullViaClusters(clustersOut.clusters,streamlines,streamThresh)
+#create bool vecs for both outputs
+survivingStreamsBoolVec=np.zeros(len(streamlines),dtype=bool)
+survivingStreamsBoolVec[survivingStreamsIndicies]=True
+culledStreamsBoolVec=np.zeros(len(streamlines),dtype=bool)
+culledStreamsBoolVec[culledStreamIndicies]=True
 
 #start figuring out how you're going to output this...
 
@@ -143,11 +96,11 @@ try:
 except:
     #wmc doesn't really matter, just create uniform vec outputs for both
     #have to do this because of brainilfe output conventions
-    surviveBool=np.ones(len(survivingStreamsIndicies),dtype=bool)
-    survivorClass=wmaPyTools.streamlineTools.updateClassification(surviveBool,'survivingStreams',existingClassification=None)
+    #surviveBool=np.ones(len(survivingStreamsIndicies),dtype=bool)
+    survivorClass=wmaPyTools.streamlineTools.updateClassification(survivingStreamsBoolVec,'survivingStreams',existingClassification=None)
     
-    cullBool=np.ones(len(culledStreamIndicies),dtype=bool)
-    culledClass=wmaPyTools.streamlineTools.updateClassification(surviveBool,'culledStreams',existingClassification=None)
+    #MAcullBool=np.ones(len(culledStreamIndicies),dtype=bool)
+    culledClass=wmaPyTools.streamlineTools.updateClassification(culledStreamsBoolVec,'culledStreams',existingClassification=None)
     
     #create some output 
     #wmc
