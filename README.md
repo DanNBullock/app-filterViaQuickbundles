@@ -3,6 +3,48 @@
 
 # [app name]
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Removes spurious streamlines from a .tck tractogram by clustering it with DIPY QuickBundlesX and culling streamlines in small clusters, also splitting an optional white matter classification.**
+
+Clusters the whole-brain tractogram with dipy.segment.bundles.qbx_and_merge and keeps only streamlines in clusters with more than streamThresh members; the rest are written to a separate culled tractogram. If a white matter classification is supplied, its labels are split to match the surviving and culled streamlines. Use it as a quick outlier-removal step after tractography. The README is an unfilled template, and qbThreshes is parsed but not passed to the clustering, which always uses thresholds 30, 20, 10, 5 mm.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/track/tck` · `neuro/wmc` (optional) |
+| 📤 **Outputs** | `neuro/track/tck` ×2 · `neuro/wmc` ×2 |
+| 🐳 **Container** | `brainlife/dipy:1.4.1` |
+| ⚙️ **Resources** | 4 CPUs · 30 GB memory · 4 h walltime |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.564](https://doi.org/10.25663/brainlife.app.564) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `tractogram` | `neuro/track/tck` | yes | A whole brain tractogram that is to be subjected to a cull of extraneous or otherwise spurious streamlines |
+| `classification` | `neuro/wmc` | no | Optional white matter classification (classification.mat) indexing the tractogram's streamlines; its labels are carried over to the surviving and culled outputs. |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `tck_survived` | `neuro/track/tck` | The output tractogram which has had some number of spurious or extraneous streamlines removed. |
+| `wmc_survived` | `neuro/wmc` | A WMC corresponding to the surviving streamlines. Identities passed through if WMC input provided, otherwise ignore. |
+| `tck_culled` | `neuro/track/tck` | A tractogram containing the streamlines that were culled |
+| `wmc_culled` | `neuro/wmc` | A WMC corresponding to the culled streamlines. Identities passed through if WMC input provided, otherwise ignore. |
+
+<details>
+<summary><b>⚙️ Parameters</b> (2)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `streamThresh` | number | `5` | The minimum streamlines (and thus an **integer**) needed in a quickBundles cluster in order to survive the culling process. |
+| `qbThreshes` | string | `32,16,8,3` | Comma-separated QuickBundlesX distance thresholds; parsed by the code but not passed to qbx_and_merge, so the defaults 30,20,10,5 are always used. |
+
+</details>
+
+<!-- brainlife-app:end -->
+
 ## Overview description
 
 This is where the description of the app goes.  Provide quick summaries of:
